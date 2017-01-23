@@ -8,8 +8,8 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="#4aa3df">
         
         <base href="<?=BASE_HREF;?>/">
-        <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
-        <link rel="stylesheet" href="./css/styles.css">
+        <link rel="shortcut icon" href="<?=BASE_HREF;?>/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="<?=BASE_HREF;?>/css/styles.css">
         
         <title><?=$data['page_title'];?></title>
     </head>
