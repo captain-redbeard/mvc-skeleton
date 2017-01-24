@@ -116,7 +116,7 @@ class Google2FA
         $bin_counter = pack('N*', 0) . pack('N*', $counter); // Counter must be 64-bit int
         $hash = hash_hmac('sha1', $bin_counter, $key, true);
         
-        return str_pad(self::oath_truncate($hash), self::otpLength, '0', STR_PAD_LEFT);
+        return str_pad(self::oathTruncate($hash), self::OPTLENGTH, '0', STR_PAD_LEFT);
     }
     
     /**
@@ -131,16 +131,16 @@ class Google2FA
      **/
     public static function verifyKey($b32seed, $key, $window = 1, $useTimeStamp = true)
     {
-        $timeStamp = self::get_timestamp();
+        $timeStamp = self::getTimestamp();
         
         if ($useTimeStamp !== true) {
             $timeStamp = (int)$useTimeStamp;
         }
         
-        $binarySeed = self::base32_decode($b32seed);
+        $binarySeed = self::base32Decode($b32seed);
         
         for ($ts = $timeStamp - $window; $ts <= $timeStamp + $window; $ts++) {
-            if (self::oath_hotp($binarySeed, $ts) == $key) {
+            if (self::oathHotp($binarySeed, $ts) == $key) {
                 return true;
             }
         }
@@ -162,6 +162,6 @@ class Google2FA
             ((ord($hash[$offset+1]) & 0xff) << 16 ) |
             ((ord($hash[$offset+2]) & 0xff) << 8 ) |
             (ord($hash[$offset+3]) & 0xff)
-        ) % pow(10, self::otpLength);
+        ) % pow(10, self::OPTLENGTH);
     }
 }

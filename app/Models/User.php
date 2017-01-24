@@ -63,11 +63,11 @@ class User
     
     public function register($username, $password, $timezone)
     {
-        $username = Functions::cleanInput($username, 1);
+        $username = Functions::cleanInput($username);
         $timezone = Functions::cleanInput($timezone, 1);
         
-        $validUsername = validateUsername($username);
-        $validPassword = validateUsername($password);
+        $validUsername = $this->validateUsername($username);
+        $validPassword = $this->validatePassword($password);
         
         if ($validUsername !== 0) {
             return $validUsername;
@@ -77,7 +77,7 @@ class User
             return $validPassword;
         }
         
-        if ($timezone == -1) {
+        if ($timezone === -1) {
             return 6;
         }
         
@@ -109,7 +109,7 @@ class User
                 Session::start();
                 $_SESSION['user_id'] = $userid;
                 $_SESSION['login_string'] = hash('sha512', $userid . $_SERVER['HTTP_USER_AGENT'] . $guid);
-                $_SESSION[USESSION] = self::getUser($userid, $passphrase);
+                $_SESSION[USESSION] = $this->getUser($userid, $passphrase);
                 return 0;
             } else {
                 return 8;
@@ -119,10 +119,10 @@ class User
     
     public function login($username, $password, $mfa)
     {
-        $username = Functions::cleanInput($username, 1);
+        $username = Functions::cleanInput($username);
         
-        $validUsername = validateUsername($username);
-        $validPassword = validateUsername($password);
+        $validUsername = $this->validateUsername($username);
+        $validPassword = $this->validatePassword($password);
         
         if ($validUsername !== 0) {
             return $validUsername;
@@ -166,7 +166,7 @@ class User
                         );
                     }
                     
-                    if ($existing[0]['mfa_enabled'] == -1) {
+                    if ($existing[0]['mfa_enabled'] === -1) {
                         $rmfa = Google2FA::verifyKey($existing[0]['secret_key'], $mfa);
                         
                         if (!$rmfa) {
@@ -185,7 +185,7 @@ class User
                         'sha512',
                         $existing[0]['user_id'] . $_SERVER['HTTP_USER_AGENT'] . $existing[0]['user_guid']
                     );
-                    $_SESSION[ASESSION] = self::getUser($_SESSION['user_id']);
+                    $_SESSION[USESSION] = $this->getUser($_SESSION['user_id']);
                     
                     return 0;
                 } else {
@@ -205,10 +205,10 @@ class User
     
     public function update($username, $timezone)
     {
-        $username = Functions::cleanInput($username, 1);
+        $username = Functions::cleanInput($username);
         $timezone = Functions::cleanInput($timezone, 1);
         
-        $validUsername = validateUsername($username);
+        $validUsername = $this->validateUsername($username);
         
         if ($validUsername !== 0) {
             return $validUsername;
@@ -219,7 +219,7 @@ class User
             [$username]
         );
         
-        if (count($existing) > 0 && $existing[0]['username'] != $_SESSION[USESSION]->username) {
+        if (count($existing) > 0 && $existing[0]['username'] != $this->username) {
             return 2;
         }
         
@@ -228,11 +228,11 @@ class User
             [
                 $username,
                 $timezone,
-                $_SESSION[USESSION]->user_id,
-                $_SESSION[USESSION]->user_guid
+                $this->user_id,
+                $this->user_guid
             ]
         )) {
-                $_SESSION[USESSION] = User::getUser($_SESSION[USESSION]->user_id, $_SESSION[USESSION]->passphrase);
+                $_SESSION[USESSION] = $thisgetUser($this->user_id, $this->passphrase);
                 return 0;
         } else {
             return 6;
@@ -241,18 +241,18 @@ class User
     
     public function enableMfa($code1, $code2)
     {
-        $code1 = Functions::cleanInput($_POST['code1']);
-        $code2 = Functions::cleanInput($_POST['code2']);
+        $code1 = Functions::cleanInput($_POST['code1'], 2);
+        $code2 = Functions::cleanInput($_POST['code2'], 2);
         
-        if ($code1 == null || $code2 == null) {
+        if ($code1 === null || $code2 === null) {
             return 1;
         }
         
         $user = Database::select(
             "SELECT secret_key, mfa_enabled FROM users WHERE user_id = ? AND user_guid = ?;",
             [
-                $_SESSION[USESSION]->user_id,
-                $_SESSION[USESSION]->user_guid
+                $this->user_id,
+                $this->user_guid
             ]
         );
         
@@ -263,11 +263,11 @@ class User
             if (Database::update(
                 "UPDATE users SET mfa_enabled = -1 WHERE user_id = ? AND user_guid = ?;",
                 [
-                    $_SESSION[USESSION]->user_id,
-                    $_SESSION[USESSION]->user_guid
+                    $this->user_id,
+                    $this->user_guid
                 ]
             )) {
-                $_SESSION[USESSION]->mfa_enabled = -1;
+                $this->mfa_enabled = -1;
                 return 0;
             }
         } else {
@@ -280,12 +280,12 @@ class User
         Database::update(
             "UPDATE users SET mfa_enabled = 0 WHERE user_id = ? AND user_guid = ?;",
             [
-                $_SESSION[USESSION]->user_id,
-                $_SESSION[USESSION]->user_guid
+                $this->user_id,
+                $this->user_guid
             ]
         );
         
-        $_SESSION[USESSION]->mfa_enabled = 0;
+        $this->mfa_enabled = 0;
     }
     
     public function resetPassword($password, $new_password, $confirm_new_password)
@@ -294,7 +294,7 @@ class User
             return 10;
         }
         
-        $validPassword = validateUsername($new_password);
+        $validPassword = $this->validatePassword($new_password);
         
         if ($validPassword !== 0) {
             return $validPassword;
@@ -303,8 +303,8 @@ class User
         $user = Database::select(
             "SELECT user_id, user_guid, password FROM users WHERE user_id = ? AND user_guid = ?;",
             [
-                $_SESSION[USESSION]->user_id,
-                $_SESSION[USESSION]->user_guid
+                $this->user_id,
+                $this->user_guid
             ]
         );
 
@@ -320,8 +320,8 @@ class User
                     "UPDATE users SET password = ? WHERE user_id = ? AND user_guid = ?;",
                     [
                         $newpass,
-                        $_SESSION[USESSION]->user_id,
-                        $_SESSION[USESSION]->user_guid
+                        $this->user_id,
+                        $this->user_guid
                     ]
                 )) {
                     return 0;
@@ -366,17 +366,13 @@ class User
     }
     
     public function validatePassword($password)
-    {
-        if ($password == null) {
+    {        
+        if ($password === null || strlen($password) < 9) {
             return 3;
         }
         
-        if (strlen($password) < 9) {
-            return 4;
-        }
-        
         if (strlen($password) > 255) {
-            return 5;
+            return 4;
         }
         
         return 0;

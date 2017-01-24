@@ -40,11 +40,10 @@ class Functions
         }
     }
     
-    public static function cleanInput($input, $level = 2)
+    public static function cleanInput($input, $level = -1)
     {
         switch ($level) {
             case 0:
-                //NO FILTERING, MUST FILTER BEFORE DISPLAYING
                 $clean = $input;
                 break;
             case 1:
@@ -57,7 +56,6 @@ class Functions
                 break;
             default:
                 $clean = strip_tags($input);
-                $clean = preg_replace('/[^a-zA-Z0-9 \-]/i', ' ', $clean);
                 break;
         }
         
