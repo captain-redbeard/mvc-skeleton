@@ -366,7 +366,7 @@ class User
     }
     
     public function validatePassword($password)
-    {        
+    {
         if ($password === null || strlen($password) < 9) {
             return 3;
         }

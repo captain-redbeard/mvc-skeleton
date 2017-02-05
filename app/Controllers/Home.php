@@ -7,26 +7,28 @@ namespace Redbeard\Controllers;
 
 class Home extends Controller
 {
-    //Parameters are dervied from the URL by exploding at slash
-    public function index($param1 = null, $param2 = null)
+    public function __construct()
     {
-        //Param1 will contain post values if they are set
-        
         //Start session
         $this->startSession();
-        
+    }
+    
+    //Parameters are derived from the URL by exploding at slash
+    public function index($param1 = null, $param2 = null)
+    {
         //View page
         $this->view(
-            ['home'],
+            ['home'],                                       //Page to load from Views
             [
-                'page' => 'home',
-                'page_title' => SITE_NAME,
-                'token' => $_SESSION['token'],
-                'param1' => $param1,
-                'param2' => $param2,
-                'error' => ''
+                'page' => 'home',                           //Page, used in Views/templates/header.php
+                'page_title' => SITE_NAME,                  //Page title, used in Views/templates/header.php
+                'page_description' => 'site description',   //Page description, used in Views/templates/header.php
+                'page_keywords' => 'redbeard, example',     //Page keywords, used in Views/templates/header.php
+                'token' => $_SESSION['token'],              //XSS token is automatically generated and lasts 5 minutes
+                'param1' => $param1,                        //Example GET parameter 1
+                'param2' => $param2                         //Example GET parameter 2
             ],
-            false
+            false                                           //Hide templates (header/footer)
         );
     }
 }

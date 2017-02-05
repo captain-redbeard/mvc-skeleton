@@ -10,13 +10,13 @@ use Redbeard\Core\Functions;
 
 class Controller
 {
-    public function model($model)
+    protected function model($model)
     {
         $model = APP_PATH . 'Models\\' . $model;
         return new $model;
     }
     
-    public function startSession()
+    protected function startSession()
     {
         Session::start();
         
@@ -26,7 +26,7 @@ class Controller
         }
     }
     
-    public function checkToken()
+    protected function checkToken()
     {
         $this->startSession();
         if (isset($_POST['token']) && $_POST['token'] === $_SESSION['token']) {
@@ -36,30 +36,30 @@ class Controller
         }
     }
     
-    public function isLoggedIn()
+    protected function isLoggedIn()
     {
         $this->startSession();
         return Session::loginCheck();
     }
     
-    public function requiresLogin()
+    protected function requiresLogin()
     {
         if (!$this->isLoggedIn()) {
             $this->redirect('login');
         }
     }
     
-    public function redirect($page)
+    protected function redirect($page)
     {
         header('Location: ' . BASE_HREF . '/' . $page);
     }
     
-    public function logout()
+    protected function logout()
     {
         Session::kill();
     }
     
-    public function view($view = [], $data = [], $raw = false)
+    protected function view($view = [], $data = [], $raw = false)
     {
         if (!$raw) {
             require_once '../app/Views/template/header.php';

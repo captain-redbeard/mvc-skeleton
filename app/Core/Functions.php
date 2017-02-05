@@ -40,6 +40,21 @@ class Functions
         }
     }
     
+    public static function cleanMethodName($name)
+    {
+        return str_replace(
+            ' ',
+            '',
+            ucwords(
+                str_replace(
+                    '-',
+                    ' ',
+                    strtolower($name)
+                )
+            )
+        );
+    }
+    
     public static function cleanInput($input, $level = -1)
     {
         switch ($level) {

@@ -1,8 +1,5 @@
 <?php
 /**
- * Details:
- * This is the configuration file, be sure to change the values as required.
- *
  * @author captain-redbeard
  * @since 20/01/17
  */
@@ -20,8 +17,9 @@ define("SITE_NAME", "Redbeards MVC Skeleton");
 define("TIMEZONE", "Australia/Brisbane");
 define("USESSION", "redbeard_user");
 define("PW_COST", 12);
-define("SECURE", false);
+define("SECURE", true);
+define("MAX_LOGIN_ATTEMPTS", 5);
 define("APP_PATH", "\\Redbeard\\");
 define("DEFAULT_CONTROLLER", "Home");
 define("DEFAULT_METHOD", "index");
-define("MAX_LOGIN_ATTEMPTS", 5);
+define("THEME_COLOR", "4aa3df");
