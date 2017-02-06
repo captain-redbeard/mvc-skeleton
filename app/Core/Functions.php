@@ -5,6 +5,7 @@
  */
 namespace Redbeard\Core;
 
+use Redbeard\Core\Config;
 use \DateTime;
 use \DateTimeZone;
 
@@ -29,8 +30,8 @@ class Functions
     
     public static function convertTime($time_convert, $short = false)
     {
-        $userTime = new DateTime($time_convert, new DateTimeZone(TIMEZONE));
-        $userTime->setTimezone(new DateTimeZone($_SESSION[USESSION]->timezone));
+        $userTime = new DateTime($time_convert, new DateTimeZone(Config::get('app.timezone')));
+        $userTime->setTimezone(new DateTimeZone($_SESSION[Config::get('app.user_session')]->timezone));
         if (!$short) {
             return $userTime->format('Y-m-d h:i:s A');
         } else {

@@ -5,6 +5,7 @@
  */
 namespace Redbeard\Models;
 
+use Redbeard\Core\Config;
 use Redbeard\Core\Functions;
 use Redbeard\Core\Database;
 use Redbeard\Core\Session;
@@ -87,7 +88,7 @@ class User
                 return 7;
             }
             
-            $password = password_hash($password, PASSWORD_DEFAULT, ['cost' => PW_COST]);
+            $password = password_hash($password, PASSWORD_DEFAULT, ['cost' => Config::get('app.password_cost')]);
             $guid = Functions::generateRandomString(32);
             $activation = Functions::generateRandomString(32);
             $secretkey = Google2FA::generateSecretKey();
@@ -109,7 +110,7 @@ class User
                 Session::start();
                 $_SESSION['user_id'] = $userid;
                 $_SESSION['login_string'] = hash('sha512', $userid . $_SERVER['HTTP_USER_AGENT'] . $guid);
-                $_SESSION[USESSION] = $this->getUser($userid, $passphrase);
+                $_SESSION[Config::get('app.user_session')] = $this->getUser($userid, $passphrase);
                 return 0;
             } else {
                 return 8;
@@ -144,17 +145,17 @@ class User
                 [$existing[0]['user_id']]
             );
             
-            if (count($attempts) < MAX_LOGIN_ATTEMPTS) {
+            if (count($attempts) < Config::get('app.max_login_attempts')) {
                 if (password_verify($password, $existing[0]['password'])) {
                     if (password_needs_rehash(
                         $existing[0]['password'],
                         PASSWORD_DEFAULT,
-                        ['cost' => PW_COST]
+                        ['cost' => Config::get('app.password_cost')]
                     )) {
                         $newhash = password_hash(
                             $password,
                             PASSWORD_DEFAULT,
-                            ['cost' => PW_COST]
+                            ['cost' => Config::get('app.password_cost')]
                         );
                             
                         Database::update(
@@ -185,7 +186,7 @@ class User
                         'sha512',
                         $existing[0]['user_id'] . $_SERVER['HTTP_USER_AGENT'] . $existing[0]['user_guid']
                     );
-                    $_SESSION[USESSION] = $this->getUser($_SESSION['user_id']);
+                    $_SESSION[Config::get('app.user_session')] = $this->getUser($_SESSION['user_id']);
                     
                     return 0;
                 } else {
@@ -232,7 +233,7 @@ class User
                 $this->user_guid
             ]
         )) {
-                $_SESSION[USESSION] = $thisgetUser($this->user_id, $this->passphrase);
+                $_SESSION[Config::get('app.user_session')] = $thisgetUser($this->user_id, $this->passphrase);
                 return 0;
         } else {
             return 6;
@@ -313,7 +314,7 @@ class User
                 $newpass = password_hash(
                     $new_password,
                     PASSWORD_DEFAULT,
-                    ['cost' => PW_COST]
+                    ['cost' => Config::get('app.password_cost')]
                 );
                 
                 if (Database::update(

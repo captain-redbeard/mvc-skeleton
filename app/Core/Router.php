@@ -5,16 +5,20 @@
  */
 namespace Redbeard\Core;
 
+use Redbeard\Core\Config;
 use Redbeard\Core\Functions;
 
 class Router
 {
-    protected $controller = APP_PATH . "Controllers\\" . DEFAULT_CONTROLLER;
-    protected $method = DEFAULT_METHOD;
+    protected $controller = null;
+    protected $method = null;
     protected $parameters = [];
     
     public function route($get, $post)
     {
+        $this->controller = Config::get('app.path') . "Controllers\\" . Config::get('app.default_controller');
+        $this->method = Config::get('app.default_method');
+        
         //Get parsed url
         $url = $this->parseUrl($get);
         
@@ -62,7 +66,7 @@ class Router
             $temp = Functions::cleanMethodName($url[0]);
             
             if (file_exists('../app/Controllers/' . $temp . '.php')) {
-                $this->controller = APP_PATH . 'Controllers\\' . $temp;
+                $this->controller = Config::get('app.path') . 'Controllers\\' . $temp;
                 unset($url[0]);
             }
         }

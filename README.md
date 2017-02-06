@@ -112,19 +112,45 @@ class Home extends Controller
     {
         //View page
         $this->view(
-            ['home'],                                       //Page to load from Views
+            ['home'],                                               //Page to load from Views
             [
-                'page' => 'home',                           //Page, used in Views/templates/header.php
-                'page_title' => SITE_NAME,                  //Page title, used in Views/templates/header.php
-                'page_description' => 'site description',   //Page description, used in Views/templates/header.php
-                'page_keywords' => 'redbeard, example',     //Page keywords, used in Views/templates/header.php
-                'token' => $_SESSION['token'],              //XSS token is automatically generated and lasts 5 minutes
-                'param1' => $param1,                        //Example GET parameter 1
-                'param2' => $param2                         //Example GET parameter 2
+                'page' => 'home',                                   //Page, used in Views/templates/header.php
+                'page_title' => $this->config('site.name'),         //Page title, used in Views/templates/header.php
+                'page_description' => 'site description',           //Page description, used in Views/templates/header.php
+                'page_keywords' => 'redbeard, example',             //Page keywords, used in Views/templates/header.php
+                'token' => $_SESSION['token'],                      //XSS token is automatically generated and lasts 5 minutes
+                'param1' => $param1,                                //Example GET parameter 1
+                'param2' => $param2                                 //Example GET parameter 2
             ],
-            false                                           //Hide templates (header/footer)
+            false                                                   //Hide templates (header/footer)
         );
     }
 }
 
+
+```
+
+---
+
+### Config
+Config files are set in a PHP file returning an array. Sub arrays are accessed with a **.** for separation as seen below (up to four levels).
+
+##### Get config from controller
+```
+$this->config('app.timezone')
+```
+
+##### Set config from controller
+```
+$this->config('app.timezone', 'UTC');
+```
+
+##### Get config directly
+```
+Config::get('app.timezone');
+```
+
+##### Set config directly
+```
+Config::set('app.timezone', 'UTC');
 ```

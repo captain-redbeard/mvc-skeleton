@@ -5,6 +5,7 @@
  */
 namespace Redbeard\Controllers;
 
+use Redbeard\Core\Config;
 use Redbeard\Core\Session;
 use Redbeard\Core\Functions;
 
@@ -12,7 +13,7 @@ class Controller
 {
     protected function model($model)
     {
-        $model = APP_PATH . 'Models\\' . $model;
+        $model = Config::get('app.path') . 'Models\\' . $model;
         return new $model;
     }
     
@@ -51,7 +52,7 @@ class Controller
     
     protected function redirect($page)
     {
-        header('Location: ' . BASE_HREF . '/' . $page);
+        header('Location: ' . $this->config('app.base_href') . '/' . $page);
     }
     
     protected function logout()
@@ -61,6 +62,9 @@ class Controller
     
     protected function view($view = [], $data = [], $raw = false)
     {
+        $data['BASE_HREF'] = $this->config('app.base_href');
+        $data['THEME_COLOR'] = $this->config('site.theme_color');
+        
         if (!$raw) {
             require_once '../app/Views/template/header.php';
         }
@@ -71,6 +75,15 @@ class Controller
         
         if (!$raw) {
             require_once '../app/Views/template/footer.php';
+        }
+    }
+    
+    protected function config($key, $value = null)
+    {
+        if ($value === null) {
+            return Config::get($key);
+        } else {
+            Config::set($key, $value);
         }
     }
 }

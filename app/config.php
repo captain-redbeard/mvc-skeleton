@@ -1,25 +1,33 @@
 <?php
 /**
  * @author captain-redbeard
- * @since 20/01/17
+ * @since 05/02/17
  */
 
-//Database
-getenv("DB_HOSTNAME") != null ? define("DB_HOSTNAME", getenv("DB_HOSTNAME")) : define("DB_HOSTNAME", "localhost");
-getenv("DB_DATABASE") != null ? define("DB_DATABASE", getenv("DB_DATABASE")) : define("DB_DATABASE", "mvc-skeleton");
-getenv("DB_USERNAME") != null ? define("DB_USERNAME", getenv("DB_USERNAME")) : define("DB_USERNAME", "");
-getenv("DB_PASSWORD") != null ? define("DB_PASSWORD", getenv("DB_PASSWORD")) : define("DB_PASSWORD", "");
-getenv("DB_CHARSET") != null ? define("DB_CHARSET", getenv("DB_CHARSET")) : define("DB_CHARSET", "utf8mb4");
-
-//App
-define("BASE_DIR", __DIR__);
-define("SITE_NAME", "Redbeards MVC Skeleton");
-define("TIMEZONE", "Australia/Brisbane");
-define("USESSION", "redbeard_user");
-define("PW_COST", 12);
-define("SECURE", true);
-define("MAX_LOGIN_ATTEMPTS", 5);
-define("APP_PATH", "\\Redbeard\\");
-define("DEFAULT_CONTROLLER", "Home");
-define("DEFAULT_METHOD", "index");
-define("THEME_COLOR", "4aa3df");
+return [
+    'app' => [
+        'base_dir' =>           __DIR__,
+        'timezone' =>           'UTC',
+        'user_session' =>       'redbeard_user',
+        'password_cost' =>      12,
+        'max_login_attempts' => 5,
+        'secure_cookies' =>     true,
+        'path' =>               '\\Redbeard\\',
+        'default_controller' => 'Home',
+        'default_method' =>     'index'
+    ],
+    
+    'database' => [
+        'rdbms' =>              'mysql',
+        'hostname' =>           'localhost',
+        'database' =>           'mvc-skeleton',
+        'username' =>           '',
+        'password' =>           '',
+        'charset'  =>           'utf8mb4',
+    ],
+    
+    'site' => [
+        'name' =>               'Redbeards MVC Skeleton',
+        'theme_color' =>        '4aa3df'
+    ]
+];
