@@ -21,8 +21,15 @@ class Controller
     {
         Session::start();
         
-        if (!isset($_SESSION['token']) || (isset($_SESSION['token']) && (time() - $_SESSION['token_time'])) < 300) {
+        if (
+            !isset($_SESSION['token']) ||
+            (isset($_SESSION['token']) && (time() - $_SESSION['token_time']) > $this->config('app.token_expire_time'))
+           ) {
+            //Create new token
             $_SESSION['token'] = Functions::generateRandomString(32);
+            $_SESSION['token_time'] = time();
+        } else {
+            //Extend token time, user is still active
             $_SESSION['token_time'] = time();
         }
     }
@@ -30,6 +37,7 @@ class Controller
     protected function checkToken()
     {
         $this->startSession();
+        
         if (isset($_POST['token']) && $_POST['token'] === $_SESSION['token']) {
             return true;
         } else {
@@ -84,6 +92,13 @@ class Controller
             return Config::get($key);
         } else {
             Config::set($key, $value);
+        }
+    }
+    
+    protected function requiresPermission($permission)
+    {
+        if (!$_SESSION[$this->config('app.user_session')]->hasPermission($permission)) {
+            $this->redirect('permission-denied');
         }
     }
 }

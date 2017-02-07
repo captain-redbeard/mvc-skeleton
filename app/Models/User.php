@@ -79,25 +79,27 @@ class User
         }
         
         if ($timezone === -1) {
-            return 6;
+            return 10;
         }
         
         if (!isset($error)) {
             $existing = Database::select("SELECT user_id FROM users WHERE username = ?;", [$username]);
             if (count($existing) > 0) {
-                return 7;
+                return 11;
             }
             
             $password = password_hash($password, PASSWORD_DEFAULT, ['cost' => Config::get('app.password_cost')]);
             $guid = Functions::generateRandomString(32);
             $activation = Functions::generateRandomString(32);
             $secretkey = Google2FA::generateSecretKey();
-
+            
+            //Insert user
             $userid = Database::insert(
-                "INSERT INTO users (user_guid, username, password, secret_key, activation, timezone, modified) 
-                    VALUES (?,?,?,?,?,?,NOW());",
+                "INSERT INTO users (user_guid, username, email, password, secret_key, activation, timezone, modified) 
+                    VALUES (?,?,?,?,?,?,?,NOW());",
                 [
                     $guid,
+                    $username,
                     $username,
                     $password,
                     $secretkey,
@@ -106,19 +108,27 @@ class User
                 ]
             );
             
-            if ($insertid > -1) {
+            if ($userid > -1) {
+                //Insert user role
+                Database::insert(
+                    "INSERT into user_roles (user_id, role_id, modified) VALUES (?,?,NOW());",
+                    [
+                        $userid,
+                        Config::get('app.user_role')
+                    ]
+                );
                 Session::start();
                 $_SESSION['user_id'] = $userid;
                 $_SESSION['login_string'] = hash('sha512', $userid . $_SERVER['HTTP_USER_AGENT'] . $guid);
                 $_SESSION[Config::get('app.user_session')] = $this->getUser($userid, $passphrase);
                 return 0;
             } else {
-                return 8;
+                return 12;
             }
         }
     }
     
-    public function login($username, $password, $mfa)
+    public function login($username, $password, $mfa = null)
     {
         $username = Functions::cleanInput($username);
         
@@ -176,7 +186,7 @@ class User
                                 [$existing[0]['user_id']]
                             );
                             
-                            return 7;
+                            return 11;
                         }
                     }
                     
@@ -194,13 +204,13 @@ class User
                         "INSERT INTO login_attempts(user_id, made_date) VALUES (?, NOW());",
                         [$existing[0]['user_id']]
                     );
-                    return 6;
+                    return 10;
                 }
             } else {
-                return 8;
+                return 12;
             }
         } else {
-            return 9;
+            return 13;
         }
     }
     
@@ -221,7 +231,7 @@ class User
         );
         
         if (count($existing) > 0 && $existing[0]['username'] != $this->username) {
-            return 2;
+            return 10;
         }
         
         if (Database::update(
@@ -236,7 +246,7 @@ class User
                 $_SESSION[Config::get('app.user_session')] = $thisgetUser($this->user_id, $this->passphrase);
                 return 0;
         } else {
-            return 6;
+            return 11;
         }
     }
     
@@ -337,10 +347,10 @@ class User
         }
     }
     
-    public function hasPrivilege($perm)
+    public function hasPermission($perm)
     {
         foreach ($this->roles as $role) {
-            if ($role->hasPerm($perm)) {
+            if ($role->hasPermission($perm)) {
                 return true;
             }
         }
