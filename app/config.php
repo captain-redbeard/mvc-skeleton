@@ -12,7 +12,7 @@ return [
         'user_role' =>          10,
         'password_cost' =>      12,
         'max_login_attempts' => 5,
-        'secure_cookies' =>     false,
+        'secure_cookies' =>     true,
         'token_expire_time' =>  900,
         'path' =>               '\\Redbeard\\',
         'default_controller' => 'Home',
