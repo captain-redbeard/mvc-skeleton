@@ -1,11 +1,11 @@
 <?php
 /**
  * @author captain-redbeard
- * @since 07/02/17
+ * @since 11/02/17
  */
 namespace Redbeard\Controllers;
 
-class PermissionDenied extends Controller
+class InvalidToken extends Controller
 {
     public function __construct()
     {
@@ -17,10 +17,10 @@ class PermissionDenied extends Controller
     {
         //View page
         $this->view(
-            ['template/navbar','error/permission-denied'],
+            ['template/navbar','error/invalid-token'],
             [
-                'page' => 'permission-denied',
-                'page_title' => 'Permission denied - ' . $this->config('site.name'),
+                'page' => 'invalid-token',
+                'page_title' => 'Invalid Token - ' . $this->config('site.name'),
                 'page_description' => '',
                 'page_keywords' => '',
                 'token' => $_SESSION['token']

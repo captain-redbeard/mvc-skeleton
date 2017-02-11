@@ -81,24 +81,24 @@ class Functions
     public static function niceTime($date)
     {
         if (empty($date)) {
-            return "No date provided";
+            return 'No date provided.';
         }
         
-        $periods = array("second", "minute", "hour", "day", "week", "month", "year", "decade");
-        $lengths = array("60","60","24","7","4.35","12","10");
+        $periods = ['second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade'];
+        $lengths = ['60','60','24','7','4.35','12','10'];
         $now = time();
         $unix_date = strtotime($date);
         
         if (empty($unix_date)) {
-            return "Bad date";
+            return 'Bad date.';
         }
         
         if ($now > $unix_date) {
             $difference = $now - $unix_date;
-            $tense = "ago";
+            $tense = 'ago';
         } else {
             $difference = $unix_date - $now;
-            $tense = "";
+            $tense = '';
         }
         
         for ($j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++) {
@@ -108,7 +108,7 @@ class Functions
         $difference = round($difference);
         
         if ($difference != 1) {
-            $periods[$j].= "s";
+            $periods[$j].= 's';
         }
         
         return "$difference $periods[$j] {$tense}";
@@ -117,14 +117,14 @@ class Functions
     public static function getDirectoryAsUrl()
     {
         $url = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
-        $url .= $_SERVER['SERVER_NAME'] . str_replace($_SERVER['DOCUMENT_ROOT'], "", dirname(__DIR__));
+        $url .= $_SERVER['SERVER_NAME'] . str_replace($_SERVER['DOCUMENT_ROOT'], '', dirname(__DIR__));
         return $url;
     }
     
     public static function getUrl()
     {
         $url = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
-        $url .= $_SERVER['SERVER_NAME'] . str_replace($_SERVER['DOCUMENT_ROOT'], "", $_SERVER['PHP_SELF']);
+        $url .= $_SERVER['SERVER_NAME'] . str_replace($_SERVER['DOCUMENT_ROOT'], '', $_SERVER['PHP_SELF']);
         return str_replace('/index.php', '', $url);
     }
     

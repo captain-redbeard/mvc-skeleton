@@ -18,7 +18,7 @@ class Home extends Controller
     {
         //View page
         $this->view(
-            ['template/navbar','home'],                             //Page to load from Views
+            ['template/navbar','home'],                             //Page(s) to load from Views
             [
                 'page' => 'home',                                   //Page, used in Views/templates/header.php
                 'page_title' => $this->config('site.name'),         //Page title, used in Views/templates/header.php

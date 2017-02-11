@@ -79,13 +79,13 @@ class User
         }
         
         if ($timezone === -1) {
-            return 10;
+            return 'You must select a Timezone.';
         }
         
         if (!isset($error)) {
             $existing = Database::select("SELECT user_id FROM users WHERE username = ?;", [$username]);
             if (count($existing) > 0) {
-                return 11;
+                return 'Username is already taken.';
             }
             
             $password = password_hash($password, PASSWORD_DEFAULT, ['cost' => Config::get('app.password_cost')]);
@@ -123,7 +123,7 @@ class User
                 $_SESSION[Config::get('app.user_session')] = $this->getUser($userid, $passphrase);
                 return 0;
             } else {
-                return 12;
+                return 'Failed to create user, contact support.';
             }
         }
     }
@@ -186,7 +186,7 @@ class User
                                 [$existing[0]['user_id']]
                             );
                             
-                            return 11;
+                            return 'MFA Failed.';
                         }
                     }
                     
@@ -204,13 +204,13 @@ class User
                         "INSERT INTO login_attempts(user_id, made_date) VALUES (?, NOW());",
                         [$existing[0]['user_id']]
                     );
-                    return 10;
+                    return 'Incorrect password.';
                 }
             } else {
-                return 12;
+                return 'To many login attempts, try again later.';
             }
         } else {
-            return 13;
+            return 'User not found.';
         }
     }
     
@@ -231,7 +231,7 @@ class User
         );
         
         if (count($existing) > 0 && $existing[0]['username'] != $this->username) {
-            return 10;
+            return 'Username already taken.';
         }
         
         if (Database::update(
@@ -243,10 +243,10 @@ class User
                 $this->user_guid
             ]
         )) {
-                $_SESSION[Config::get('app.user_session')] = $thisgetUser($this->user_id, $this->passphrase);
+                $_SESSION[Config::get('app.user_session')] = $this->getUser($this->user_id);
                 return 0;
         } else {
-            return 11;
+            return 'Failed to update user, contact support.';
         }
     }
     
@@ -256,7 +256,7 @@ class User
         $code2 = Functions::cleanInput($_POST['code2'], 2);
         
         if ($code1 === null || $code2 === null) {
-            return 1;
+            return 'You must provide two consecutive codes.';
         }
         
         $user = Database::select(
@@ -282,7 +282,7 @@ class User
                 return 0;
             }
         } else {
-            return 2;
+            return 'Invalid codes.';
         }
     }
     
@@ -302,7 +302,7 @@ class User
     public function resetPassword($password, $new_password, $confirm_new_password)
     {
         if ($new_password != $confirm_new_password) {
-            return 10;
+            return 'Passwords don\'t match.';
         }
         
         $validPassword = $this->validatePassword($new_password);
@@ -337,13 +337,13 @@ class User
                 )) {
                     return 0;
                 } else {
-                    return 11;
+                    return 'Failed to reset password, contact support.';
                 }
             } else {
-                return 12;
+                return 'Incorrect password';
             }
         } else {
-            return 13;
+            return 'User not found.';
         }
     }
     
@@ -366,11 +366,11 @@ class User
     public function validateUsername($username)
     {
         if (strlen(trim($username)) < 1) {
-            return 1;
+            return 'Username must be at least 1 character.';
         }
         
         if (strlen($username) > 255) {
-            return 2;
+            return 'Username must be less than 256 characters.';
         }
         
         return 0;
@@ -379,11 +379,11 @@ class User
     public function validatePassword($password)
     {
         if ($password === null || strlen($password) < 9) {
-            return 3;
+            return 'Password must be greater than 8 characters.';
         }
         
         if (strlen($password) > 255) {
-            return 4;
+            return 'Password must be less than 256 characters.';
         }
         
         return 0;

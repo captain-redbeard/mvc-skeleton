@@ -36,7 +36,9 @@ class Router
         }
         
         //Call controller->method
-        call_user_func_array([$this->controller, $this->method], $this->parameters);
+        if (!$this->controller->isRedirecting()) {
+            call_user_func_array([$this->controller, $this->method], $this->parameters);
+        }
     }
     
     private function parseUrl($get)

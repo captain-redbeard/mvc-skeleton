@@ -11,6 +11,8 @@ use Redbeard\Core\Functions;
 
 class Controller
 {
+    private $redirecting = false;
+    
     protected function model($model)
     {
         $model = Config::get('app.path') . 'Models\\' . $model;
@@ -60,6 +62,7 @@ class Controller
     
     protected function redirect($page)
     {
+        $this->redirecting = true;
         header('Location: ' . $this->config('app.base_href') . '/' . $page);
     }
     
@@ -100,5 +103,17 @@ class Controller
         if (!$_SESSION[$this->config('app.user_session')]->hasPermission($permission)) {
             $this->redirect('permission-denied');
         }
+    }
+    
+    protected function requiresToken()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$this->checkToken()) {
+            $this->redirect('invalid-token');
+        }
+    }
+    
+    public function isRedirecting()
+    {
+        return $this->redirecting;
     }
 }

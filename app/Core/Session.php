@@ -19,9 +19,9 @@ class Session
             
             $cookie_params = session_get_cookie_params();
             session_set_cookie_params(
-                $cookie_params["lifetime"],
-                $cookie_params["path"],
-                $cookie_params["domain"],
+                $cookie_params['lifetime'],
+                $cookie_params['path'],
+                $cookie_params['domain'],
                 $secure,
                 $http_only
             );
@@ -47,10 +47,10 @@ class Session
             session_name(),
             '',
             time() - 42000,
-            $params["path"],
-            $params["domain"],
-            $params["secure"],
-            $params["httponly"]
+            $params['path'],
+            $params['domain'],
+            $params['secure'],
+            $params['httponly']
         );
         
         return session_destroy();
