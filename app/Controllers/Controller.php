@@ -105,10 +105,10 @@ class Controller
         }
     }
     
-    protected function requiresToken()
+    protected function requiresToken($className)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$this->checkToken()) {
-            $this->redirect('invalid-token');
+            $this->redirect('invalid-token/' . $className);
         }
     }
     

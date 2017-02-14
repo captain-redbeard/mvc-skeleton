@@ -13,7 +13,7 @@ class InvalidToken extends Controller
         $this->startSession();
     }
     
-    public function index()
+    public function index($previousPage = null)
     {
         //View page
         $this->view(
@@ -23,6 +23,7 @@ class InvalidToken extends Controller
                 'page_title' => 'Invalid Token - ' . $this->config('site.name'),
                 'page_description' => '',
                 'page_keywords' => '',
+                'previous_page' => $previousPage,
                 'token' => $_SESSION['token']
             ],
             false

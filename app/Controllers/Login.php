@@ -17,7 +17,7 @@ class Login extends Controller
         }
         
         //Check token
-        $this->requiresToken();
+        $this->requiresToken('login');
     }
     
     public function index($parameters = ['username' => '', 'error' => ''])
@@ -38,7 +38,7 @@ class Login extends Controller
         );
     }
     
-    public function authenticate($parameters)
+    public function authenticate($parameters = [])
     {
         //Get user model
         $user = $this->model('User');

@@ -18,7 +18,7 @@ class Register extends Controller
         }
         
         //Check token
-        $this->requiresToken();
+        $this->requiresToken('register');
     }
     
     public function index($parameters = ['timezone' => '', 'username' => '', 'error' => ''])
@@ -41,7 +41,7 @@ class Register extends Controller
         );
     }
     
-    public function user($parameters)
+    public function user($parameters = [])
     {
         //Get user model
         $user = $this->model('User');
