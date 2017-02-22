@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Redbeard\\' => array($baseDir . '/app'),
+    'Redbeard\\' => array($baseDir . '/application'),
 );

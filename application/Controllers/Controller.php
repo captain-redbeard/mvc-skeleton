@@ -15,7 +15,7 @@ class Controller
     
     protected function model($model)
     {
-        $model = Config::get('app.path') . 'Models\\' . $model;
+        $model = $this->config('app.path') . 'Models\\' . $model;
         return new $model;
     }
     
@@ -74,18 +74,20 @@ class Controller
     protected function view($view = [], $data = [], $raw = false)
     {
         $data['BASE_HREF'] = $this->config('app.base_href');
-        $data['THEME_COLOR'] = $this->config('site.theme_color');
+        $data['SITE'] = $this->config('site');
+        $data['LOGGED_IN'] = $this->isLoggedIn();
+        $base_directory = $this->config('app.base_dir');
         
         if (!$raw) {
-            require_once '../app/Views/template/header.php';
+            require_once $base_directory . '/Views/template/header.php';
         }
         
         foreach ($view as $v) {
-            require_once '../app/Views/' . $v . '.php';
+            require_once $base_directory . '/Views/' . $v . '.php';
         }
         
         if (!$raw) {
-            require_once '../app/Views/template/footer.php';
+            require_once $base_directory . '/Views/template/footer.php';
         }
     }
     
@@ -115,5 +117,10 @@ class Controller
     public function isRedirecting()
     {
         return $this->redirecting;
+    }
+    
+    protected function getUser()
+    {
+        return $_SESSION[$this->config('app.user_session')];
     }
 }

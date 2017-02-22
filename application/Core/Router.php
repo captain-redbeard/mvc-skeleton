@@ -13,6 +13,8 @@ class Router
     protected $controller = null;
     protected $method = null;
     protected $parameters = [];
+    protected $controller_index = 0;
+    protected $method_index = 1;
     
     public function route($get, $post)
     {
@@ -23,11 +25,19 @@ class Router
         $url = $this->parseUrl($get);
         
         //Set controller
-        $url = $this->setController($url);
+        $url = $this->setController(
+            $url,
+            $this->controller_index
+        );
+        
+        //Create controller instance
         $this->controller = new $this->controller();
         
         //Set method
-        $url = $this->setMethod($url);
+        $url = $this->setMethod(
+            $url,
+            $this->method_index
+        );
         
         //Set parameters
         $this->parameters = $url;
@@ -62,30 +72,50 @@ class Router
         return [];
     }
     
-    private function setController($url)
+    private function setController($url, $controller_index)
     {
-        if (isset($url[0])) {
-            $temp = Functions::cleanMethodName($url[0]);
+        if (isset($url[$controller_index])) {
+            $temp = '';
             
-            if (file_exists('../app/Controllers/' . $temp . '.php')) {
-                $this->controller = Config::get('app.path') . 'Controllers\\' . $temp;
-                unset($url[0]);
+            //Get folder structure
+            for ($i = 0; $i <= $controller_index; $i++) {
+                $temp .= Functions::cleanMethodName($url[$i]);
+                
+                if ($i < $controller_index) {
+                    $temp .= '/';
+                }
+            }
+            
+            //Check if controller is found, otherwise keep searching folders
+            if (file_exists(Config::get('app.base_dir') . '/Controllers/' . $temp . '.php')) {
+                $this->controller = Config::get('app.path') . 'Controllers\\' . str_replace('/', '\\', $temp);
+                $this->method_index = $controller_index + 1;
+                
+                //Unset URL
+                for ($i = 0; $i <= $controller_index; $i++) {
+                    unset($url[$i]);
+                }
+            } elseif (file_exists(Config::get('app.base_dir') . '/Controllers/' . $temp)) {
+                $url = $this->setController(
+                    $url,
+                    ($controller_index + 1)
+                );
             }
         }
         
         return $url;
     }
     
-    private function setMethod($url)
+    private function setMethod($url, $method_index)
     {
-        if (isset($url[1])) {
-            $temp = Functions::cleanMethodName($url[1]);
+        if (isset($url[$method_index])) {
+            $temp = Functions::cleanMethodName($url[$method_index]);
             
             if (method_exists($this->controller, $temp)) {
                 $reflection_method = new \ReflectionMethod($this->controller, $temp);
                 if ($reflection_method->isPublic()) {
                     $this->method = $temp;
-                    unset($url[1]);
+                    unset($url[$method_index]);
                 }
             }
         }

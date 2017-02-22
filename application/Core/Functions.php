@@ -68,7 +68,16 @@ class Functions
                 break;
             case 2:
                 $clean = strip_tags($input);
-                $clean = preg_replace('/[^a-zA-Z0-9 \-\/]/i', ' ', $clean);
+                $clean = preg_replace('/[^a-zA-Z0-9 \-\/ ,]/i', ' ', $clean);
+                break;
+            case 3:
+                $clean = strip_tags($input);
+                $clean = preg_replace('/[^a-zA-Z0-9 \-]/i', ' ', $clean);
+                break;
+            case 4:
+                $clean = strip_tags($input);
+                $clean = preg_replace('/[^a-zA-Z0-9 \-]/i', ' ', $clean);
+                $clean = self::cleanTitle($clean);
                 break;
             default:
                 $clean = strip_tags($input);
@@ -144,5 +153,14 @@ class Functions
     public static function restoreTitle($title)
     {
         return ucfirst(str_replace('-', ' ', $title));
+    }
+    
+    public static function truncateString($string, $length)
+    {
+        if (strlen($string) > $length) {
+            $string = substr($string, 0, $length) . '..';
+        }
+        
+        return $string;
     }
 }

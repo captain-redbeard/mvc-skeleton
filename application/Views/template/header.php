@@ -4,9 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes">
         
-        <meta name="theme-color" content="#<?=$data['THEME_COLOR'];?>">
-        <meta name="msapplication-navbutton-color" content="#<?=$data['THEME_COLOR'];?>">
-        <meta name="apple-mobile-web-app-status-bar-style" content="#<?=$data['THEME_COLOR'];?>">
+        <meta name="theme-color" content="#<?=$data['SITE']['theme_color'];?>">
+        <meta name="msapplication-navbutton-color" content="#<?=$data['SITE']['theme_color'];?>">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#<?=$data['SITE']['theme_color'];?>">
         
         <meta name="description" content="<?=$data['page_description'];?>">
         <meta name="keywords" content="<?=$data['page_keywords'];?>">

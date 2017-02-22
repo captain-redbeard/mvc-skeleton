@@ -25,7 +25,10 @@ class Register extends Controller
     {
         //View page
         $this->view(
-            ['template/navbar','register'],                                             //Page to load from Views
+            [                                                                           //Page to load from Views
+                'template/navbar',
+                'register'
+            ],
             [
                 'page' => 'register',                                                   //Page, used in Views/templates/header.php
                 'page_title' => 'Register to ' . $this->config('site.name'),            //Page title, used in Views/templates/header.php

@@ -11,8 +11,20 @@ class Config
     
     public static function init()
     {
-        $config = require_once '../app/config.php';
+        //Load default config
+        $config = require_once __DIR__ . '/../config.php';
         self::load($config);
+        
+        //Get other configs
+        $configs = scandir(self::get('app.config_directory'));
+        
+        //Load other configs
+        foreach ($configs as $file) {
+            if ($file !== '.' && $file !== '..') {
+                $config = require_once self::get('app.config_directory') . $file;
+                self::load($config);
+            }
+        }
     }
     
     public static function load($config)

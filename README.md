@@ -14,7 +14,6 @@ PHP based MVC skeleton.
 Ensure your root folder is set to the **public** folder.
 
 ```
-Options -Multiviews
 RewriteEngine On
 
 RewriteBase /
@@ -52,6 +51,7 @@ Routing is automatically handled via the **Router** class. The Router will split
 * finally, any remaining **url** are interrupted as **GET** parameters
 * if the above conditions are not met, then all of **url** is interrupted as **GET** parameters
 * if there are **POST** parameters they are appended to the last **url**
+* now supports sub folders e.g. Controllers/Members/MyController
 
 ##### Example 1
 ```
@@ -112,13 +112,16 @@ class Home extends Controller
     {
         //View page
         $this->view(
-            ['home'],                                               //Page to load from Views
+            [                                                       //Page(s) to load from Views
+                'template/navbar',
+                'home'
+            ],
             [
                 'page' => 'home',                                   //Page, used in Views/templates/header.php
                 'page_title' => $this->config('site.name'),         //Page title, used in Views/templates/header.php
                 'page_description' => 'site description',           //Page description, used in Views/templates/header.php
                 'page_keywords' => 'redbeard, example',             //Page keywords, used in Views/templates/header.php
-                'token' => $_SESSION['token'],                      //XSS token is automatically generated and lasts 5 minutes
+                'token' => $_SESSION['token'],                      //XSS token is automatically generated
                 'param1' => $param1,                                //Example GET parameter 1
                 'param2' => $param2                                 //Example GET parameter 2
             ],
@@ -134,6 +137,7 @@ class Home extends Controller
 
 ### Config
 Config files are set in a PHP file returning an array. Sub arrays are accessed with a **.** for separation as seen below (up to four levels).
+Config files can be created under the Config directory to be automatically loaded into the Config array.
 
 ##### Get config from controller
 ```
