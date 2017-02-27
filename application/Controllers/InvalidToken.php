@@ -17,7 +17,10 @@ class InvalidToken extends Controller
     {
         //View page
         $this->view(
-            ['template/navbar','error/invalid-token'],
+            [
+                'template/navbar',
+                'error/invalid-token'
+            ],
             [
                 'page' => 'invalid-token',
                 'page_title' => 'Invalid Token - ' . $this->config('site.name'),

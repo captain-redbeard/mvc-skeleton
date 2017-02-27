@@ -163,4 +163,17 @@ class Functions
         
         return $string;
     }
+    
+    public static function validateVariable($name, $variable, $min_length, $max_length)
+    {
+        if (strlen(trim($variable)) < $min_length) {
+            return $name . ' must be at least ' . $min_length .' character.';
+        }
+        
+        if (strlen($variable) > $max_length) {
+            return $name . ' must be less than ' . $max_length . ' characters.';
+        }
+        
+        return 0;
+    }
 }

@@ -24,17 +24,20 @@ class Login extends Controller
     {
         //View page
         $this->view(
-            ['template/navbar','login'],                                            //Page to load from Views
             [
-                'page' => 'login',                                                  //Page, used in Views/templates/header.php
-                'page_title' => 'Login to ' . $this->config('site.name'),           //Page title, used in Views/templates/header.php
-                'page_description' => 'login site description',                     //Page description, used in Views/templates/header.php
-                'page_keywords' => 'redbeard, example',                             //Page keywords, used in Views/templates/header.php
-                'username' => htmlspecialchars($parameters['username']),            //Username to display
-                'token' => $_SESSION['token'],                                      //XSS token is automatically generated
-                'error' => $parameters['error']                                     //Error message
+                'template/navbar',
+                'login'
             ],
-            false                                                                   //Hide templates (header/footer)
+            [
+                'page' => 'login',
+                'page_title' => 'Login to ' . $this->config('site.name'),
+                'page_description' => 'login site description',
+                'page_keywords' => 'redbeard, example',
+                'username' => htmlspecialchars($parameters['username']),
+                'token' => $_SESSION['token'],
+                'error' => $parameters['error']
+            ],
+            false
         );
     }
     

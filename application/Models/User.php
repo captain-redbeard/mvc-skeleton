@@ -14,25 +14,25 @@ use Redbeard\ThirdParty\Google2FA;
 
 class User
 {
-    public $user_id = null;
-    public $user_guid = null;
+    public $id = null;
+    public $guid = null;
     public $username = null;
     public $email = null;
     public $timezone = null;
     public $mfa_enabled = null;
     public $roles = null;
     
-    public function getUser($userid)
+    public function getUser($user_id)
     {
         $user_details = Database::select(
             "SELECT user_id, user_guid, username, email, timezone, mfa_enabled FROM users WHERE user_id = ?;",
-            [$userid]
+            [$user_id]
         );
         
         if (count($user_details) > 0) {
             $user = new User();
-            $user->user_id = $user_details[0]['user_id'];
-            $user->user_guid = $user_details[0]['user_guid'];
+            $user->id = $user_details[0]['user_id'];
+            $user->guid = $user_details[0]['user_guid'];
             $user->username = htmlspecialchars($user_details[0]['username']);
             $user->email = htmlspecialchars($user_details[0]['email']);
             $user->timezone = htmlspecialchars($user_details[0]['timezone']);
@@ -67,8 +67,8 @@ class User
         $username = Functions::cleanInput($username);
         $timezone = Functions::cleanInput($timezone, 1);
         
-        $validUsername = $this->validateUsername($username);
-        $validPassword = $this->validatePassword($password);
+        $validUsername = Functions::validateVariable('Username', $username, 1, 256);
+        $validPassword = Functions::validateVariable('Password', $password, 8, 256);
         
         if ($validUsername !== 0) {
             return $validUsername;
@@ -94,7 +94,7 @@ class User
             $secretkey = Google2FA::generateSecretKey();
             
             //Insert user
-            $userid = Database::insert(
+            $user_id = Database::insert(
                 "INSERT INTO users (user_guid, username, email, password, secret_key, activation, timezone, modified) 
                     VALUES (?,?,?,?,?,?,?,NOW());",
                 [
@@ -108,19 +108,20 @@ class User
                 ]
             );
             
-            if ($userid > -1) {
+            if ($user_id > -1) {
                 //Insert user role
                 Database::insert(
                     "INSERT into user_roles (user_id, role_id, modified) VALUES (?,?,NOW());",
                     [
-                        $userid,
+                        $user_id,
                         Config::get('app.user_role')
                     ]
                 );
+                
                 Session::start();
-                $_SESSION['user_id'] = $userid;
-                $_SESSION['login_string'] = hash('sha512', $userid . $_SERVER['HTTP_USER_AGENT'] . $guid);
-                $_SESSION[Config::get('app.user_session')] = $this->getUser($userid, $passphrase);
+                $_SESSION['user_id'] = $user_id;
+                $_SESSION['login_string'] = hash('sha512', $user_id . $_SERVER['HTTP_USER_AGENT'] . $guid);
+                $_SESSION[Config::get('app.user_session')] = $this->getUser($user_id);
                 return 0;
             } else {
                 return 'Failed to create user, contact support.';
@@ -132,8 +133,8 @@ class User
     {
         $username = Functions::cleanInput($username);
         
-        $validUsername = $this->validateUsername($username);
-        $validPassword = $this->validatePassword($password);
+        $validUsername = Functions::validateVariable('Username', $username, 1, 256);
+        $validPassword = Functions::validateVariable('Password', $password, 8, 256);
         
         if ($validUsername !== 0) {
             return $validUsername;
@@ -219,7 +220,7 @@ class User
         $username = Functions::cleanInput($username);
         $timezone = Functions::cleanInput($timezone, 1);
         
-        $validUsername = $this->validateUsername($username);
+        $validUsername = Functions::validateVariable('Username', $username, 1, 256);
         
         if ($validUsername !== 0) {
             return $validUsername;
@@ -239,8 +240,8 @@ class User
             [
                 $username,
                 $timezone,
-                $this->user_id,
-                $this->user_guid
+                $this->id,
+                $this->guid
             ]
         )) {
                 $_SESSION[Config::get('app.user_session')] = $this->getUser($this->user_id);
@@ -262,8 +263,8 @@ class User
         $user = Database::select(
             "SELECT secret_key, mfa_enabled FROM users WHERE user_id = ? AND user_guid = ?;",
             [
-                $this->user_id,
-                $this->user_guid
+                $this->id,
+                $this->guid
             ]
         );
         
@@ -274,8 +275,8 @@ class User
             if (Database::update(
                 "UPDATE users SET mfa_enabled = -1 WHERE user_id = ? AND user_guid = ?;",
                 [
-                    $this->user_id,
-                    $this->user_guid
+                    $this->id,
+                    $this->guid
                 ]
             )) {
                 $this->mfa_enabled = -1;
@@ -291,8 +292,8 @@ class User
         Database::update(
             "UPDATE users SET mfa_enabled = 0 WHERE user_id = ? AND user_guid = ?;",
             [
-                $this->user_id,
-                $this->user_guid
+                $this->id,
+                $this->guid
             ]
         );
         
@@ -305,7 +306,7 @@ class User
             return 'Passwords don\'t match.';
         }
         
-        $validPassword = $this->validatePassword($new_password);
+        $validPassword = Functions::validateVariable('Password', $new_password, 8, 256);
         
         if ($validPassword !== 0) {
             return $validPassword;
@@ -314,8 +315,8 @@ class User
         $user = Database::select(
             "SELECT user_id, user_guid, password FROM users WHERE user_id = ? AND user_guid = ?;",
             [
-                $this->user_id,
-                $this->user_guid
+                $this->id,
+                $this->guid
             ]
         );
 
@@ -331,8 +332,8 @@ class User
                     "UPDATE users SET password = ? WHERE user_id = ? AND user_guid = ?;",
                     [
                         $newpass,
-                        $this->user_id,
-                        $this->user_guid
+                        $this->id,
+                        $this->guid
                     ]
                 )) {
                     return 0;
@@ -361,31 +362,5 @@ class User
     public function hasRole($role_name)
     {
         return isset($this->roles[$role_name]);
-    }
-    
-    public function validateUsername($username)
-    {
-        if (strlen(trim($username)) < 1) {
-            return 'Username must be at least 1 character.';
-        }
-        
-        if (strlen($username) > 255) {
-            return 'Username must be less than 256 characters.';
-        }
-        
-        return 0;
-    }
-    
-    public function validatePassword($password)
-    {
-        if ($password === null || strlen($password) < 9) {
-            return 'Password must be greater than 8 characters.';
-        }
-        
-        if (strlen($password) > 255) {
-            return 'Password must be less than 256 characters.';
-        }
-        
-        return 0;
     }
 }

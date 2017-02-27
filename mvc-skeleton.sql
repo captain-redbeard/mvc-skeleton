@@ -2,7 +2,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 22, 2017 at 06:33 PM
+-- Generation Time: Feb 27, 2017 at 11:47 PM
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `login_attempts` (
   `user_id` int(11) UNSIGNED NOT NULL,
   `made_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -36,8 +36,15 @@ CREATE TABLE `login_attempts` (
 
 CREATE TABLE `permissions` (
   `perm_id` int(11) UNSIGNED NOT NULL,
-  `perm_desc` varchar(64) CHARACTER SET utf8mb4 NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `perm_desc` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `permissions`
+--
+
+INSERT INTO `permissions` (`perm_id`, `perm_desc`) VALUES
+(1, 'View Members');
 
 -- --------------------------------------------------------
 
@@ -47,8 +54,8 @@ CREATE TABLE `permissions` (
 
 CREATE TABLE `roles` (
   `role_id` int(11) UNSIGNED NOT NULL,
-  `role_name` varchar(64) CHARACTER SET utf8mb4 NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+  `role_name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `roles`
@@ -67,7 +74,15 @@ INSERT INTO `roles` (`role_id`, `role_name`) VALUES
 CREATE TABLE `role_perm` (
   `role_id` int(11) UNSIGNED NOT NULL,
   `perm_id` int(11) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `role_perm`
+--
+
+INSERT INTO `role_perm` (`role_id`, `perm_id`) VALUES
+(1, 1),
+(10, 1);
 
 -- --------------------------------------------------------
 
@@ -77,19 +92,19 @@ CREATE TABLE `role_perm` (
 
 CREATE TABLE `users` (
   `user_id` int(11) UNSIGNED NOT NULL,
-  `user_guid` varchar(32) CHARACTER SET utf8mb4 NOT NULL,
-  `username` varchar(256) CHARACTER SET utf8mb4 NOT NULL,
-  `password` varchar(256) CHARACTER SET utf8mb4 NOT NULL,
-  `email` varchar(256) CHARACTER SET utf8mb4 NOT NULL,
-  `secret_key` varchar(32) CHARACTER SET utf8mb4 NOT NULL,
-  `activation` varchar(32) CHARACTER SET utf8mb4 NOT NULL,
-  `timezone` varchar(128) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'UTC',
+  `user_guid` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `username` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `secret_key` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `activation` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `timezone` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'UTC',
   `mfa_enabled` tinyint(1) NOT NULL DEFAULT '0',
   `password_reset` tinyint(1) NOT NULL DEFAULT '0',
   `modified` datetime DEFAULT NULL,
   `made_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `cancelled` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -103,7 +118,7 @@ CREATE TABLE `user_roles` (
   `modified` timestamp NULL DEFAULT NULL,
   `made_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `cancelled` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Indexes for dumped tables
@@ -153,7 +168,7 @@ ALTER TABLE `user_roles`
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `perm_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `perm_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `users`
 --

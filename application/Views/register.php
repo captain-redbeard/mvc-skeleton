@@ -1,6 +1,6 @@
             <form method="POST" action="<?=$data['BASE_HREF'];?>/register/user">
                 <label for="username">Username:</label>
-                <input type="text" name="username" id="username" title="Username" tabindex="1" required autoselect>
+                <input type="text" name="username" id="username" title="Username" tabindex="1" required autofocus>
                 
                 <label for="password">Password:</label>
                 <input type="password" name="password" id="password" title="Password" tabindex="2" required>
