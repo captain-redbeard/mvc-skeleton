@@ -1,10 +1,14 @@
 {
+    "minimum-stability" : "dev",
+    "prefer-stable" : true,
+    
     "require": {
-        "php": ">=7.0.0"
+        "redbeards/crew": "dev-master"
     },
+    
     "autoload": {
         "psr-4": {
-            "Redbeard\\": "app/"
+            "Demo\\": "application/"
         }
     }
 }

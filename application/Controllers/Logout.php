@@ -3,7 +3,9 @@
  * @author captain-redbeard
  * @since 07/02/17
  */
-namespace Redbeard\Controllers;
+namespace Demo\Controllers;
+
+use Redbeard\Crew\Controller;
 
 class Logout extends Controller
 {

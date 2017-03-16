@@ -2,7 +2,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 27, 2017 at 11:47 PM
+-- Generation Time: Mar 08, 2017 at 09:38 PM
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -94,13 +94,17 @@ CREATE TABLE `users` (
   `user_id` int(11) UNSIGNED NOT NULL,
   `user_guid` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `username` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `first_name` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_name` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `secret_key` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `activation` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `timezone` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'UTC',
   `mfa_enabled` tinyint(1) NOT NULL DEFAULT '0',
   `password_reset` tinyint(1) NOT NULL DEFAULT '0',
+  `password_reset_request_date` datetime DEFAULT NULL,
+  `password_reset_date` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
   `made_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `cancelled` tinyint(1) NOT NULL DEFAULT '0'

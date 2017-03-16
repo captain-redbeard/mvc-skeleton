@@ -3,7 +3,9 @@
  * @author captain-redbeard
  * @since 07/02/17
  */
-namespace Redbeard\Controllers;
+namespace Demo\Controllers;
+
+use Redbeard\Crew\Controller;
 
 class PermissionDenied extends Controller
 {
@@ -17,7 +19,10 @@ class PermissionDenied extends Controller
     {
         //View page
         $this->view(
-            ['template/navbar','error/permission-denied'],
+            [
+                'template/navbar',
+                'error/permission-denied'
+            ],
             [
                 'page' => 'permission-denied',
                 'page_title' => 'Permission denied - ' . $this->config('site.name'),

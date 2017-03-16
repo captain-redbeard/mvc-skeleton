@@ -3,7 +3,9 @@
  * @author captain-redbeard
  * @since 11/02/17
  */
-namespace Redbeard\Controllers;
+namespace Demo\Controllers;
+
+use Redbeard\Crew\Controller;
 
 class InvalidToken extends Controller
 {

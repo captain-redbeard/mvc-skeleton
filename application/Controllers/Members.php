@@ -3,10 +3,9 @@
  * @author captain-redbeard
  * @since 07/02/17
  */
-namespace Redbeard\Controllers;
+namespace Demo\Controllers;
 
-use Redbeard\Core\Functions;
-use Redbeard\Core\Database;
+use Redbeard\Crew\Controller;
 
 class Members extends Controller
 {
@@ -16,7 +15,7 @@ class Members extends Controller
         $this->requiresLogin();
         
         //Check permission
-        $this->requiresPermission('View Members');
+        //$this->requiresPermission('View Members');
     }
     
     public function index()

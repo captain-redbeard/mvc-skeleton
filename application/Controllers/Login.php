@@ -3,9 +3,9 @@
  * @author captain-redbeard
  * @since 07/02/17
  */
-namespace Redbeard\Controllers;
+namespace Demo\Controllers;
 
-use Redbeard\Core\Functions;
+use Redbeard\Crew\Controller;
 
 class Login extends Controller
 {
@@ -44,7 +44,7 @@ class Login extends Controller
     public function authenticate($parameters = [])
     {
         //Get user model
-        $user = $this->model('User');
+        $user = $this->systemModel('User');
         
         //Attempt login
         $error = $user->login(

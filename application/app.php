@@ -3,10 +3,10 @@
  * @author captain-redbeard
  * @since 20/01/17
  */
-use Redbeard\Core\Config;
-use Redbeard\Core\Router;
-use Redbeard\Core\Functions;
-use Redbeard\Core\Database;
+use Redbeard\Crew\Config;
+use Redbeard\Crew\Router;
+use Redbeard\Crew\Utils\Urls;
+use Redbeard\Crew\Database;
 
 //Require autoloader
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -15,7 +15,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 Config::init();
 
 //Set base url
-Config::set('app.base_href', Functions::getUrl());
+Config::set('app.base_href', Urls::getUrl());
 
 //Set database config
 Database::init(Config::get('database'));

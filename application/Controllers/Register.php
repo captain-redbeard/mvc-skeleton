@@ -3,10 +3,10 @@
  * @author captain-redbeard
  * @since 07/02/17
  */
-namespace Redbeard\Controllers;
+namespace Demo\Controllers;
 
 use \DateTimeZone;
-use Redbeard\Core\Database;
+use Redbeard\Crew\Controller;
 
 class Register extends Controller
 {
@@ -25,33 +25,34 @@ class Register extends Controller
     {
         //View page
         $this->view(
-            [                                                                           //Page to load from Views
+            [
                 'template/navbar',
                 'register'
             ],
             [
-                'page' => 'register',                                                   //Page, used in Views/templates/header.php
-                'page_title' => 'Register to ' . $this->config('site.name'),            //Page title, used in Views/templates/header.php
-                'page_description' => 'register site description',                      //Page description, used in Views/templates/header.php
-                'page_keywords' => 'redbeard, example',                                 //Page keywords, used in Views/templates/header.php
-                'timezones' => DateTimeZone::listIdentifiers(DateTimeZone::ALL),        //Timezones used in register page
-                'timezone' => htmlspecialchars($parameters['timezone']),                //Selected timezone
-                'username' => htmlspecialchars($parameters['username']),                //Selected username
-                'token' => $_SESSION['token'],                                          //XSS token is automatically generated
-                'error' => $parameters['error']                                         //Error message
+                'page' => 'register',
+                'page_title' => 'Register to ' . $this->config('site.name'),
+                'page_description' => 'register site description',
+                'page_keywords' => 'redbeard, example',
+                'timezones' => DateTimeZone::listIdentifiers(DateTimeZone::ALL),
+                'timezone' => htmlspecialchars($parameters['timezone']),
+                'username' => htmlspecialchars($parameters['username']),
+                'token' => $_SESSION['token'],
+                'error' => $parameters['error']
             ],
-            false                                                                       //Hide templates (header/footer)
+            false
         );
     }
     
     public function user($parameters = [])
     {
         //Get user model
-        $user = $this->model('User');
+        $user = $this->systemModel('User');
         
         //Attempt register
         $error = $user->register(
             $parameters['username'],
+            $parameters['password'],
             $parameters['password'],
             $parameters['timezone']
         );

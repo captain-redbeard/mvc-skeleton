@@ -15,7 +15,8 @@ return [
         'max_login_attempts' => 5,
         'secure_cookies' =>     false,
         'token_expire_time' =>  900,
-        'path' =>               '\\Redbeard\\',
+        'system_path' =>        '\\Redbeard\\Crew\\',
+        'path' =>               '\\Demo\\',
         'default_controller' => 'Home',
         'default_method' =>     'index'
     ]

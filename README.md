@@ -6,7 +6,8 @@ PHP based MVC skeleton.
 ### Requirements
 
 * PHP >= 7.0.0
-* Composer autoloader
+* Composer
+* redbeards/crew
 
 ---
 
@@ -97,7 +98,7 @@ The following is an example controller to test the above Routing.
 
 ```
 <?php
-namespace Redbeard\Controllers;
+namespace Demo\Controllers;
 
 class Home extends Controller
 {

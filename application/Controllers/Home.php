@@ -3,7 +3,9 @@
  * @author captain-redbeard
  * @since 20/01/17
  */
-namespace Redbeard\Controllers;
+namespace Demo\Controllers;
+
+use Redbeard\Crew\Controller;
 
 class Home extends Controller
 {
