@@ -2,7 +2,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 08, 2017 at 09:38 PM
+-- Generation Time: Mar 19, 2017 at 04:11 PM
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -16,6 +16,28 @@ SET time_zone = "+00:00";
 --
 -- Database: `mvc-skeleton`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `change_controls`
+--
+
+CREATE TABLE `change_controls` (
+  `change_id` int(11) UNSIGNED NOT NULL,
+  `change_guid` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `user_guid` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` blob NOT NULL,
+  `ip_address` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `host_address` varchar(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `ip_fowarded` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `reffered` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `operating_system` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `browser` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `browser_agent` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `made_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -87,6 +109,21 @@ INSERT INTO `role_perm` (`role_id`, `perm_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `settings`
+--
+
+CREATE TABLE `settings` (
+  `setting_id` int(11) UNSIGNED NOT NULL,
+  `setting_name` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `setting_value` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `modified` datetime NOT NULL,
+  `made_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -113,6 +150,22 @@ CREATE TABLE `users` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `user_access`
+--
+
+CREATE TABLE `user_access` (
+  `access_id` int(11) UNSIGNED NOT NULL,
+  `access_guid` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `user_guid` varchar(32) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `allowed` varchar(1024) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `modified` datetime NOT NULL,
+  `made_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `cancelled` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user_roles`
 --
 
@@ -127,6 +180,12 @@ CREATE TABLE `user_roles` (
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `change_controls`
+--
+ALTER TABLE `change_controls`
+  ADD PRIMARY KEY (`change_id`);
 
 --
 -- Indexes for table `permissions`
@@ -150,12 +209,24 @@ ALTER TABLE `role_perm`
   ADD KEY `perm_id` (`perm_id`);
 
 --
+-- Indexes for table `settings`
+--
+ALTER TABLE `settings`
+  ADD PRIMARY KEY (`setting_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `user_guid` (`user_guid`);
+
+--
+-- Indexes for table `user_access`
+--
+ALTER TABLE `user_access`
+  ADD PRIMARY KEY (`access_id`);
 
 --
 -- Indexes for table `user_roles`
@@ -169,15 +240,31 @@ ALTER TABLE `user_roles`
 --
 
 --
+-- AUTO_INCREMENT for table `change_controls`
+--
+ALTER TABLE `change_controls`
+  MODIFY `change_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  
+--
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
   MODIFY `perm_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
+-- AUTO_INCREMENT for table `settings`
+--
+ALTER TABLE `settings`
+  MODIFY `setting_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `user_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `user_access`
+--
+ALTER TABLE `user_access`
+  MODIFY `access_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- Constraints for dumped tables
 --
