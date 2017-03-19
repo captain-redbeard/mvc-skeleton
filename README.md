@@ -11,6 +11,11 @@ PHP based MVC skeleton.
 
 ---
 
+### Demo site
+[https://mvc-skeleton.captain-redbeard.com](https://mvc-skeleton.captain-redbeard.com)
+
+---
+
 ### Apache config
 Ensure your root folder is set to the **public** folder.
 
