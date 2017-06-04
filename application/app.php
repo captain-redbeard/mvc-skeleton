@@ -5,8 +5,8 @@
  */
 use Redbeard\Crew\Config;
 use Redbeard\Crew\Router;
-use Redbeard\Crew\Utils\Urls;
 use Redbeard\Crew\Database;
+use Redbeard\Crew\Utils\Urls;
 
 //Require autoloader
 require_once __DIR__ . '/../vendor/autoload.php';

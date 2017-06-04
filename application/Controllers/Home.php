@@ -5,6 +5,7 @@
  */
 namespace Demo\Controllers;
 
+use Redbeard\Crew\Config;
 use Redbeard\Crew\Controller;
 
 class Home extends Controller

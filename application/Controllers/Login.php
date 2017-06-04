@@ -53,7 +53,7 @@ class Login extends Controller
         );
         
         //If success redirect, otherwise display error
-        if ($error === 0) {
+        if ($error === true) {
             $this->redirect('members');
         } else {
             $this->index([
